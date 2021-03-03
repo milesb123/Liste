@@ -217,8 +217,15 @@ struct PostDetail:View{
                             .padding(.horizontal,horizontalPadding)
                         let sorted = HelperMethods.sortPostsHighestValueMostRecent(posts: posts)
                         ForEach((0..<sorted.count), id: \.self){ index in
-                            VStack(alignment:.leading){
-                                PostView(post: sorted[index], isLastPost: (index == sorted.count-1), index: self.index + index + 1, posts: HelperMethods.subPosts(index: index, posts: self.posts), horizontalPadding: 10,mediaShown:$mediaShown,mediaURL:$mediaURL)
+                            if #available(iOS 14.0, *) {
+                                LazyVStack(alignment:.leading){
+                                    PostView(post: sorted[index], isLastPost: (index == sorted.count-1), index: self.index + index + 1, posts: HelperMethods.subPosts(index: index, posts: self.posts), horizontalPadding: 10,mediaShown:$mediaShown,mediaURL:$mediaURL)
+                                }
+                            } else {
+                                // Fallback on earlier versions
+                                VStack(alignment:.leading){
+                                    PostView(post: sorted[index], isLastPost: (index == sorted.count-1), index: self.index + index + 1, posts: HelperMethods.subPosts(index: index, posts: self.posts), horizontalPadding: 10,mediaShown:$mediaShown,mediaURL:$mediaURL)
+                                }
                             }
                         }
                     }

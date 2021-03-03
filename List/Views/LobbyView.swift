@@ -11,7 +11,6 @@ import ImageViewerRemote
 struct LobbyView: View {
     @Environment(\.colorScheme) var colorScheme
     @ObservedObject var controller:LobbyController
-    
     @State var roomController:RoomController?
     
     init(controller:LobbyController){

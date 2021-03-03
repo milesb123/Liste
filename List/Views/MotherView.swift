@@ -43,10 +43,6 @@ struct MotherView: View {
         })
     }
     
-    init(){
-        self.lobbyController.activateControlListener()
-    }
-    
 }
 
 struct MotherView_Previews: PreviewProvider {

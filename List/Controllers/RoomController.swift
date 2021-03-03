@@ -28,9 +28,7 @@ class RoomController:ObservableObject{
     init(room:Room,timeInterval:Int){
         self.room = room
         self.timeInterval = timeInterval
-        DispatchQueue.main.asyncAfter(deadline: .now()+1) {
-            self.loadPosts()
-        }
+        self.loadPostsOnCollectionUpdate()
         self.activateRoomListener()
         self.activatePostCountListener()
     }

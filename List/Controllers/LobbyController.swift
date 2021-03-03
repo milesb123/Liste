@@ -18,6 +18,10 @@ class LobbyController:ObservableObject{
     //Check Mission Status
     //Get Beta Room
     
+    init(){
+        self.activateControlListener()
+    }
+    
     func activateControlListener() -> Void{
         Auth.auth().signInAnonymously { (result, err) in
             guard let _ = result else {
@@ -34,12 +38,12 @@ class LobbyController:ObservableObject{
                 guard let betaRoomID = data["stage"] as? String else { self.lobbyStatus = .error; return }
                 
                 //Get Beta Room
-                self.setBetaRoom(roomID: betaRoomID)
+                self.setStage(roomID: betaRoomID)
             }
         }
     }
     
-    func setBetaRoom(roomID:String){
+    func setStage(roomID:String){
         db.collection(Constants.rooms.rawValue).document(roomID).getDocument { (snapshot, err) in
             guard let snapshot = snapshot else { self.lobbyStatus = .error; return }
             guard let data = snapshot.data() else { self.lobbyStatus = .error; return }

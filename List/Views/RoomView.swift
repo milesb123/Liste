@@ -119,8 +119,15 @@ struct RoomView: View {
                         else{
                             let sorted = HelperMethods.sortPostsHighestValueMostRecent(posts: posts)
                             ForEach((0..<sorted.count), id: \.self){ index in
-                                VStack(alignment:.leading){
-                                    PostView(post: sorted[index], isLastPost: (index == sorted.count-1), index: index, posts: HelperMethods.subPosts(index: index, posts: self.posts), horizontalPadding: 10,mediaShown:$mediaShown,mediaURL:$mediaURL)
+                                if #available(iOS 14.0, *) {
+                                    LazyVStack(alignment:.leading){
+                                        PostView(post: sorted[index], isLastPost: (index == sorted.count-1), index: index, posts: HelperMethods.subPosts(index: index, posts: self.posts), horizontalPadding: 10,mediaShown:$mediaShown,mediaURL:$mediaURL)
+                                    }
+                                } else {
+                                    // Fallback on earlier versions
+                                    VStack(alignment:.leading){
+                                        PostView(post: sorted[index], isLastPost: (index == sorted.count-1), index: index, posts: HelperMethods.subPosts(index: index, posts: self.posts), horizontalPadding: 10,mediaShown:$mediaShown,mediaURL:$mediaURL)
+                                    }
                                 }
                             }
                             Spacer()
@@ -230,8 +237,6 @@ struct RoomView: View {
             controller.createPost(value: value, message: message, links: addedLinks, media: addedImages, localeFlag: flag,date:date,onCompletion:{ (id,err) in
                 if let _ = id{
                     self.presentSubmittedView(post: SubmissionPost(message: message, links: addedLinks, media: addedImages, datePosted: date, localeFlag: flag))
-                    controller.loadPosts()
-                    controller.loadPostsEveryNSeconds()
                 }
                 else{
                     self.viewController.presentGeneralErrorAlert()
@@ -435,7 +440,7 @@ struct RoomView: View {
         }
         
         func presentImagePicker(){
-            self.modalView = picker
+            self.modalView = picker ?? .init(ImagePicker(image: $inputImage, onFinishedPicking: self.finishedPickingImage))
             self.modalPresented = true
         }
         
